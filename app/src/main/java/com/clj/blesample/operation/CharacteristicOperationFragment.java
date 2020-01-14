@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -247,7 +248,11 @@ public class CharacteristicOperationFragment extends Fragment {
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
-                                                        addText(txt, HexUtil.formatHexString(characteristic.getValue(), true));
+                                                        Log.d("=----> PROPERTY_NOTIFY", "onCharacteristicChanged...");
+                                                        String str = HexUtil.formatHexString(characteristic.getValue(), true);
+                                                        Log.d("=----> PROPERTY_NOTIFY", "info: " + str);
+//                                                        addText(txt, HexUtil.formatHexString(characteristic.getValue(), true));
+                                                        addText(txt, str);
                                                     }
                                                 });
                                             }
@@ -305,6 +310,7 @@ public class CharacteristicOperationFragment extends Fragment {
                                                 runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
+                                                        Log.d("=----> PROPERTY_INDICATE", "onCharacteristicChanged...");
                                                         addText(txt, HexUtil.formatHexString(characteristic.getValue(), true));
                                                     }
                                                 });

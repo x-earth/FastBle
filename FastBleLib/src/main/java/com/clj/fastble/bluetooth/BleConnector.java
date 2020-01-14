@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 import com.clj.fastble.BleManager;
 import com.clj.fastble.callback.BleIndicateCallback;
@@ -275,6 +276,7 @@ public class BleConnector {
                                                   boolean useCharacteristicDescriptor,
                                                   boolean enable,
                                                   BleNotifyCallback bleNotifyCallback) {
+        Log.d("=----> 1", "setCharacteristicNotification start !!!!");
         if (gatt == null || characteristic == null) {
             notifyMsgInit();
             if (bleNotifyCallback != null)
@@ -282,7 +284,9 @@ public class BleConnector {
             return false;
         }
 
+        Log.d("=----> 2", "setCharacteristicNotification enable: " + enable);
         boolean success1 = gatt.setCharacteristicNotification(characteristic, enable);
+        Log.d("=----> 3", "setCharacteristicNotification success1: " + success1);
         if (!success1) {
             notifyMsgInit();
             if (bleNotifyCallback != null)
@@ -290,21 +294,28 @@ public class BleConnector {
             return false;
         }
 
+        Log.d("=----> 4", "setCharacteristicNotification useCharacteristicDescriptor: " + useCharacteristicDescriptor);
+        Log.d("=----> 5", "characteristic.getUuid(): " + characteristic.getUuid());
         BluetoothGattDescriptor descriptor;
         if (useCharacteristicDescriptor) {
             descriptor = characteristic.getDescriptor(characteristic.getUuid());
         } else {
+            Log.d("=----> 7", "getDescriptor: " + formUUID(UUID_CLIENT_CHARACTERISTIC_CONFIG_DESCRIPTOR));
             descriptor = characteristic.getDescriptor(formUUID(UUID_CLIENT_CHARACTERISTIC_CONFIG_DESCRIPTOR));
         }
+        Log.d("=----> 6", "descriptor: " + descriptor);
+
         if (descriptor == null) {
             notifyMsgInit();
             if (bleNotifyCallback != null)
                 bleNotifyCallback.onNotifyFailure(new OtherException("descriptor equals null"));
             return false;
         } else {
+            Log.d("=----> 8", "enable: " + enable);
             descriptor.setValue(enable ? BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE :
                     BluetoothGattDescriptor.DISABLE_NOTIFICATION_VALUE);
             boolean success2 = gatt.writeDescriptor(descriptor);
+            Log.d("=----> 9", "writeDescriptor: " + success2);
             if (!success2) {
                 notifyMsgInit();
                 if (bleNotifyCallback != null)
@@ -352,6 +363,7 @@ public class BleConnector {
                                                 boolean useCharacteristicDescriptor,
                                                 boolean enable,
                                                 BleIndicateCallback bleIndicateCallback) {
+        Log.d("=----> ", "setCharacteristic.............Indication start !!!");
         if (gatt == null || characteristic == null) {
             indicateMsgInit();
             if (bleIndicateCallback != null)
